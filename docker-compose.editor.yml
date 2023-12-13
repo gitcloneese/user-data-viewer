@@ -1,0 +1,35 @@
+version: "3.7"
+
+volumes:
+  mongodb_data:
+
+networks:
+  xy3:
+    driver: bridge
+    name: "xy3"
+#    ipam:
+#      config:
+#        - subnet: 172.20.0.0/16
+
+services:
+  xy3-db-editor:
+    # ENV {local, develop, master}
+    # If your env is not included, manually pull and retag it
+    #    image: "registry-intl.ap-southeast-1.aliyuncs.com/firerocksg/xy3-db-editor:${ENV}"
+    image: perterci/db:v3
+    container_name: xy3-db-editor
+    ports:
+      - "6369:80"
+    environment:
+      ENV: ${ENV}
+    networks:
+      - xy3
+  mongodb:
+    image: mongo:4.4
+    container_name: mongodb
+    ports:
+      - "47107:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - xy3
